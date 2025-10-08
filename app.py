@@ -26,10 +26,9 @@ st.markdown(
 with st.form("diagnostic_form"):
     col1, col2 = st.columns(2)
     with col1:
-        appliance = st.text_input(" Appliance Type", placeholder="e.g. TV, Refrigerator (mention brand name also)")
+         model_number = st.text_input(" Model Number", placeholder="e.g. LG T70SPSF2Z")
         issue = st.text_area(" Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
     with col2:
-        model_name = st.text_input(" Model Name", placeholder="e.g. LG T70SPSF2Z")
         display_error = st.text_input(" Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
 
     st.markdown("")  # spacing
@@ -42,23 +41,20 @@ if submitted:
     if not appliance or not model_name or not issue:
         st.warning(" Please fill in all the required fields before diagnosing.")
     else:
-        with st.spinner("Analyzing the issue... Please wait ⏳"):
+        with st.spinner("Analyzing the issue... Please wait "):
             prompt = f"""
 You are an appliance service diagnostic assistant.
 
-Appliance: {appliance}
-Model: {model_name}
+Model: {model_number}
 Issue: {issue}
 Display Error (if any): {display_error or 'No specific error provided'}
 
 Generate a detailed, a crisp and not elongated report including and don't include any headings just give the solution for all the questions:
-
-            1 Probable Causes(Just give the name of the issue.No need for explaination or elobaration) — 2–3 possible technical reasons for the issue and their estimated cost ranges in INR.
+According to the model number dispaly the appliance name and its company.
+            1 Give a quick checks list/self diagnosis that user can do before calling the customer care
             2 Appliance Brand Customer Care — provide the official customer care number for the appliance's brand.
-            3 Turnaround Time (TAT) — realistic average service time in days.
-            4 Spare Parts Information — if replacement is needed for all the issue given in point 1, include:
-               - Brand/original part cost & lifespan currently
-               - Local/non-branded part avg cost & lifespan for only 1 brand.
+            3 Probable Causes(Just give the name of the issue.No need for explaination or elobaration) — 2–3 possible technical reasons for the issue and their estimated cost ranges in INR.
+            4 Turnaround Time (TAT) — realistic average service time in days.
 
             Format the output with bullet points and section titles.
             If any data is unavailable, infer the most likely information based on repair trends in India. And finally the response should be short and crisp.
@@ -68,6 +64,7 @@ Format the output with:
 - Each main heading should be clear.
 - Each sub-point inside a section should start with a small black dot (•).
 - Headings themselves should have a blue diamond (🔹).
+- Make table for the Probable causes. In one column the probable issue and other column it's associated cost.
 Keep it short, clear, and visually aesthetic.
 """
 
@@ -125,4 +122,5 @@ Keep it short, clear, and visually aesthetic.
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
 
