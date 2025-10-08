@@ -15,7 +15,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("🔧 Appliance Diagnostic Assistant")
+st.title(" Appliance Diagnostic Assistant")
 st.markdown(
     "Get **probable causes**, **service info**, and **spare part details** for your home appliances."
 )
@@ -26,21 +26,21 @@ st.markdown(
 with st.form("diagnostic_form"):
     col1, col2 = st.columns(2)
     with col1:
-        appliance = st.text_input("🧺 Appliance Type", placeholder="e.g. TV, Refrigerator (mention brand)")
-        issue = st.text_area("⚙️ Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
+        appliance = st.text_input(" Appliance Type", placeholder="e.g. TV, Refrigerator (mention brand name also)")
+        issue = st.text_area(" Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
     with col2:
-        model_name = st.text_input("🔤 Model Name", placeholder="e.g. LG T70SPSF2Z")
-        display_error = st.text_input("💡 Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
+        model_name = st.text_input(" Model Name", placeholder="e.g. LG T70SPSF2Z")
+        display_error = st.text_input(" Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
 
     st.markdown("")  # spacing
-    submitted = st.form_submit_button("🔍 Diagnose Appliance", use_container_width=True)
+    submitted = st.form_submit_button(" Diagnose Appliance", use_container_width=True)
 
 # -----------------------------
 # Processing and Response
 # -----------------------------
 if submitted:
     if not appliance or not model_name or not issue:
-        st.warning("⚠️ Please fill in all the required fields before diagnosing.")
+        st.warning(" Please fill in all the required fields before diagnosing.")
     else:
         with st.spinner("Analyzing the issue... Please wait ⏳"):
             prompt = f"""
@@ -77,7 +77,7 @@ Keep it short, clear, and visually aesthetic.
                 response = model.generate_content(prompt)
                 text = response.text
 
-                st.success("✅ Diagnosis Report Generated Successfully!")
+                st.success(" Diagnosis Report Generated!")
                 st.markdown("---")
 
                 # -----------------------------
@@ -125,3 +125,4 @@ Keep it short, clear, and visually aesthetic.
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
