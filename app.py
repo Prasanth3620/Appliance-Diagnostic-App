@@ -11,10 +11,15 @@ genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 # -----------------------------------
 # 🌤️ Streamlit UI Setup
 # -----------------------------------
-st.set_page_config(page_title="Appliance Diagnostic Assistant", layout="wide")
+st.set_page_config(
+    page_title="Appliance Diagnostic Assistant",
+    layout="wide",
+)
 
 st.title("🔧 Appliance Diagnostic Assistant")
-st.markdown("Get **probable causes**, **service info**, and **spare part details** for your home appliances.")
+st.markdown(
+    "Get **probable causes**, **service info**, and **spare part details** for your home appliances."
+)
 
 # -----------------------------------
 # 1. Side-by-side input layout
@@ -22,11 +27,19 @@ st.markdown("Get **probable causes**, **service info**, and **spare part details
 with st.form("diagnostic_form"):
     col1, col2 = st.columns(2)
     with col1:
-        appliance = st.text_input("🧺 Appliance Type", placeholder="e.g. TV, Refrigerator (mention brand)")
-        issue = st.text_area("⚙️ Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
+        appliance = st.text_input(
+            "🧺 Appliance Type",
+            placeholder="e.g. TV, Refrigerator (mention brand)",
+        )
+        issue = st.text_area(
+            "⚙️ Describe the Issue",
+            placeholder="e.g. No display, Not cooling, making noise...",
+        )
     with col2:
         model_name = st.text_input("🔤 Model Name", placeholder="e.g. LG T70SPSF2Z")
-        display_error = st.text_input("💡 Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
+        display_error = st.text_input(
+            "💡 Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc."
+        )
 
     st.markdown("")  # spacing
     submitted = st.form_submit_button("🔍 Diagnose Appliance", use_container_width=True)
@@ -67,14 +80,15 @@ Format the output with bullet points and short actionable sentences.
                 st.success("✅ Diagnosis Report Generated Successfully!")
                 st.markdown("---")
 
-                # Scrollable styled output
+                # Scrollable styled output matching dark theme
                 st.markdown(
                     f"""
                     <div style="
-                        background-color:#f9f9f9;
+                        background-color:#1B1F2A;
+                        color:#E6EDF3;
                         padding:1rem;
                         border-radius:10px;
-                        border:1px solid #ddd;
+                        border:1px solid #333;
                         max-height:400px;
                         overflow-y:auto;
                         white-space:pre-wrap;
@@ -83,7 +97,7 @@ Format the output with bullet points and short actionable sentences.
                     {response.text}
                     </div>
                     """,
-                    unsafe_allow_html=True
+                    unsafe_allow_html=True,
                 )
 
             except Exception as e:
