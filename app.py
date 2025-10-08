@@ -56,12 +56,17 @@ Model: {model_name}
 Issue: {issue}
 Display Error (if any): {display_error or 'No specific error provided'}
 
-Generate a detailed, crisp, and short report including the following 4 main points:
+Generate a detailed, a crisp and not elongated report including and don't include any headings just give the solution for all the questions:
 
-1. Probable Causes & Estimated Costs
-2. Appliance Brand Customer Care
-3. Turnaround Time (TAT)
-4. Spare Parts Information
+            1 Probable Causes(Just give the name of the issue.No need for explaination or elobaration) — 2–3 possible technical reasons for the issue and their estimated cost ranges in INR.
+            2 Appliance Brand Customer Care — provide the official customer care number for the appliance's brand.
+            3 Turnaround Time (TAT) — realistic average service time in days.
+            4 Spare Parts Information — if replacement is needed for all the issue given in point 1, include:
+               - Brand/original part cost & lifespan currently
+               - Local/non-branded part avg cost & lifespan for only 1 brand.
+
+            Format the output with bullet points and section titles.
+            If any data is unavailable, infer the most likely information based on repair trends in India. And finally the response should be short and crisp.
 
 Format the output with:
 - No *, #, or markdown symbols.
@@ -124,3 +129,4 @@ Keep it short, clear, and visually aesthetic.
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
