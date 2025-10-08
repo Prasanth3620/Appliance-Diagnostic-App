@@ -62,6 +62,13 @@ Generate a detailed, a crisp and not elongated report including and don't includ
 
             Format the output with bullet points and section titles.
             If any data is unavailable, infer the most likely information based on repair trends in India. And finally the response should be short and crisp.
+
+Format the output with:
+- No *, #, or markdown symbols.
+- Each main heading should be clear.
+- Each sub-point inside a section should start with a small black dot (•).
+- Headings themselves should have a blue diamond (🔹).
+Keep it short, clear, and visually aesthetic.
 """
 
             try:
@@ -78,21 +85,26 @@ Generate a detailed, a crisp and not elongated report including and don't includ
                 # -----------------------------
                 sections = re.split(r'(?=\d\.)', text)  # splits at "1.", "2.", etc.
                 colors = ["#2E8B57", "#4682B4", "#DAA520", "#8B008B"]  # unique color per section
-                titles = ["Probable Causes", "Customer Care", "Turnaround Time (TAT)", "Spare Parts Information"]
+                headings = [
+                    "Probable Causes & Estimated Costs",
+                    "Appliance Brand Customer Care",
+                    "Turnaround Time (TAT)",
+                    "Spare Parts Information"
+                ]
 
                 for i, sec in enumerate(sections):
                     sec = sec.strip()
                     if sec:
-                        # Remove any stray * or #
-                        sec = re.sub(r'^[#*\s]+', '', sec)
+                        # Remove stray markdown symbols
+                        sec = re.sub(r'^[#*\s\d.]+', '', sec)
                         sec = re.sub(r'[*#]+$', '', sec)
 
-                        # Convert internal bullets (-) to plain text bullets
-                        sec_html = re.sub(r'^\s*[-]\s+', '• ', sec, flags=re.MULTILINE)
+                        # Replace internal bullets or '-' with black dot
+                        sec_html = re.sub(r'^\s*[-*]\s+', '• ', sec, flags=re.MULTILINE)
                         sec_html = sec_html.replace('\n', '<br>')  # preserve line breaks
 
                         # Add heading with blue diamond
-                        heading = f"🔹 {titles[i % len(titles)]}"
+                        heading = f"🔹 {headings[i % len(headings)]}"
                         st.markdown(
                             f"""
                             <div style="
