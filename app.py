@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 from google.genai import types
 
 # -----------------------------------------
@@ -75,3 +75,4 @@ if submitted:
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
