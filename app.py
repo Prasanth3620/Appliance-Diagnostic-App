@@ -51,7 +51,7 @@ Model: {model_name}
 Issue: {issue}
 Display Error (if any): {display_error or 'No specific error provided'}
 
-Generate a detailed, crisp, and short report including the following:
+Generate a detailed, a crisp and not elongated report including and don't include any headings just give the solution for all the questions:
 
 1 Probable Causes(Just give the name of the issue.No need for explaination or elobaration) — 2–3 possible technical reasons for the issue and their estimated cost ranges in INR.
 2 Appliance Brand Customer Care — provide the official customer care number for the appliance's brand.
@@ -59,6 +59,7 @@ Generate a detailed, crisp, and short report including the following:
 4 Spare Parts Information — if replacement is needed for all the issue given in point 1, include:
     - Brand/original part cost & lifespan currently
     - Local/non-branded part avg cost & lifespan for only 1 brand.
+
 Format the output with bullet points and section titles.
 If any data is unavailable, infer the most likely information based on repair trends in India. And finally the response should be short and crisp.
 """
@@ -80,7 +81,11 @@ If any data is unavailable, infer the most likely information based on repair tr
                 colors = ["#2E8B57", "#4682B4", "#DAA520", "#8B008B"]  # unique color per section
 
                 for i, sec in enumerate(sections):
-                    if sec.strip():
+                    sec = sec.strip()
+                    if sec:
+                        # Convert bullets (- or *) to HTML list
+                        sec_html = re.sub(r'^\s*[-*]\s+', '• ', sec, flags=re.MULTILINE)
+                        sec_html = sec_html.replace('\n', '<br>')  # keep line breaks
                         st.markdown(
                             f"""
                             <div style="
@@ -89,10 +94,10 @@ If any data is unavailable, infer the most likely information based on repair tr
                                 padding:1rem;
                                 border-radius:10px;
                                 margin-bottom:1rem;
-                                white-space:pre-wrap;
-                                font-family:monospace;
+                                font-family:Arial, sans-serif;
+                                line-height:1.5;
                             ">
-                            {sec.strip()}
+                            {sec_html}
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -100,4 +105,3 @@ If any data is unavailable, infer the most likely information based on repair tr
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
-
