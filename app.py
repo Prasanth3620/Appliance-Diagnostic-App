@@ -15,7 +15,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("🔧 Appliance Diagnostic Assistant")
+st.title(" Appliance Diagnostic Assistant")
 st.markdown(
     "Get quick **self-diagnosis steps**, **probable causes**, **service timelines**, and **customer support info** for your home appliances."
 )
@@ -25,25 +25,25 @@ st.markdown(
 # -----------------------------
 with st.form("diagnostic_form"):
     # Row 1: Model Name
-    model_name = st.text_input("🔤 Model Number", placeholder="e.g. Mi L32M6-RA, LG T70SPSF2Z, Samsung WA62M4100HY")
+    model_name = st.text_input(" Model Number", placeholder="e.g. Mi L32M6-RA, LG T70SPSF2Z, Samsung WA62M4100HY")
 
     # Row 2: Issue (left) and Error Code (right)
     col1, col2 = st.columns(2)
     with col1:
-        issue = st.text_area("⚙️ Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
+        issue = st.text_area(" Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
     with col2:
-        display_error = st.text_input("💡 Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
+        display_error = st.text_input(" Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
 
-    submitted = st.form_submit_button("🔍 Diagnose Appliance", use_container_width=True)
+    submitted = st.form_submit_button(" Diagnose Appliance", use_container_width=True)
 
 # -----------------------------
 # Response Generation
 # -----------------------------
 if submitted:
     if not model_name or not issue:
-        st.warning("⚠️ Please fill in the required fields before diagnosing.")
+        st.warning(" Please fill in the required fields before diagnosing.")
     else:
-        with st.spinner("Analyzing the issue... Please wait ⏳"):
+        with st.spinner("Analyzing the issue... Please wait "):
             prompt = f"""
 You are an intelligent appliance service diagnostic assistant.
 
@@ -81,7 +81,7 @@ Formatting Instructions:
                 response = model.generate_content(prompt)
                 text = response.text
 
-                st.success("✅ Diagnosis Report Generated Successfully!")
+                st.success(" Diagnosis Report Generated Successfully!")
                 st.markdown("---")
 
                 # -----------------------------
@@ -99,7 +99,7 @@ Formatting Instructions:
                             font-family:Arial;
                             margin-bottom:1rem;
                         '>
-                        <h3>🏷️ Brand & Appliance</h3>
+                        <h3> Brand & Appliance</h3>
                         <b>{match_brand.group(2).strip()}</b>
                         </div>
                         """,
@@ -136,3 +136,4 @@ Formatting Instructions:
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
