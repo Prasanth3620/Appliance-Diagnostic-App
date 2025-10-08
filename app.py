@@ -53,14 +53,14 @@ Display Error (if any): {display_error or 'No specific error provided'}
 
 Generate a detailed, crisp, and short report including the following:
 
-1. Probable Causes — 2–3 possible technical reasons for the issue with estimated cost ranges in INR.
-2. Appliance Brand Customer Care — official customer care number.
-3. Turnaround Time (TAT) — realistic average service time in days.
-4. Spare Parts Information — for all issues in point 1, include:
-   - Brand/original part cost & lifespan
-   - Local/non-branded part avg cost & lifespan
-
-Format the output with bullet points. Do not combine sections; output headings explicitly.
+1 Probable Causes(Just give the name of the issue.No need for explaination or elobaration) — 2–3 possible technical reasons for the issue and their estimated cost ranges in INR.
+2 Appliance Brand Customer Care — provide the official customer care number for the appliance's brand.
+3 Turnaround Time (TAT) — realistic average service time in days.
+4 Spare Parts Information — if replacement is needed for all the issue given in point 1, include:
+    - Brand/original part cost & lifespan currently
+    - Local/non-branded part avg cost & lifespan for only 1 brand.
+Format the output with bullet points and section titles.
+If any data is unavailable, infer the most likely information based on repair trends in India. And finally the response should be short and crisp.
 """
 
             try:
@@ -100,3 +100,4 @@ Format the output with bullet points. Do not combine sections; output headings e
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
