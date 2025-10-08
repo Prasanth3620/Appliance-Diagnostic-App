@@ -21,15 +21,21 @@ st.markdown(
 )
 
 # -----------------------------
-# Input form
+# Input form with new layout
 # -----------------------------
 with st.form("diagnostic_form"):
+    # -----------------------------
+    # Row 1: Model Name (full width)
+    # -----------------------------
+    model_name = st.text_input("🔤 Model Name", placeholder="e.g. LG T70SPSF2Z")
+
+    # -----------------------------
+    # Row 2: Issue (left) and Error Code (right)
+    # -----------------------------
     col1, col2 = st.columns(2)
     with col1:
-        appliance = st.text_input("🧺 Appliance Type", placeholder="e.g. TV, Refrigerator (mention brand)")
         issue = st.text_area("⚙️ Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
     with col2:
-        model_name = st.text_input("🔤 Model Name", placeholder="e.g. LG T70SPSF2Z")
         display_error = st.text_input("💡 Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
 
     st.markdown("")  # spacing
@@ -39,35 +45,28 @@ with st.form("diagnostic_form"):
 # Processing and Response
 # -----------------------------
 if submitted:
-    if not appliance or not model_name or not issue:
+    if not model_name or not issue:
         st.warning("⚠️ Please fill in all the required fields before diagnosing.")
     else:
         with st.spinner("Analyzing the issue... Please wait ⏳"):
             prompt = f"""
 You are an appliance service diagnostic assistant.
 
-Appliance: {appliance}
 Model: {model_name}
 Issue: {issue}
 Display Error (if any): {display_error or 'No specific error provided'}
 
-Generate a detailed, a crisp and not elongated report including and don't include any headings just give the solution for all the questions:
+Generate a detailed, crisp, and short report including the following 4 main points:
 
-            1 Probable Causes(Just give the name of the issue.No need for explaination or elobaration) — 2–3 possible technical reasons for the issue and their estimated cost ranges in INR.
-            2 Appliance Brand Customer Care — provide the official customer care number for the appliance's brand.
-            3 Turnaround Time (TAT) — realistic average service time in days.
-            4 Spare Parts Information — if replacement is needed for all the issue given in point 1, include:
-               - Brand/original part cost & lifespan currently
-               - Local/non-branded part avg cost & lifespan for only 1 brand.
-
-            Format the output with bullet points and section titles.
-            If any data is unavailable, infer the most likely information based on repair trends in India. And finally the response should be short and crisp.
+1. Probable Causes & Estimated Costs
+2. Appliance Brand Customer Care
+3. Turnaround Time (TAT)
+4. Spare Parts Information
 
 Format the output with:
 - No *, #, or markdown symbols.
-- Each main heading should be clear.
+- Each main heading should have a blue diamond (🔹).
 - Each sub-point inside a section should start with a small black dot (•).
-- Headings themselves should have a blue diamond (🔹).
 Keep it short, clear, and visually aesthetic.
 """
 
@@ -83,8 +82,8 @@ Keep it short, clear, and visually aesthetic.
                 # -----------------------------
                 # Split response into sections
                 # -----------------------------
-                sections = re.split(r'(?=\d\.)', text)  # splits at "1.", "2.", etc.
-                colors = ["#2E8B57", "#4682B4", "#DAA520", "#8B008B"]  # unique color per section
+                sections = re.split(r'(?=\d\.)', text)
+                colors = ["#2E8B57", "#4682B4", "#DAA520", "#8B008B"]
                 headings = [
                     "Probable Causes & Estimated Costs",
                     "Appliance Brand Customer Care",
@@ -101,7 +100,7 @@ Keep it short, clear, and visually aesthetic.
 
                         # Replace internal bullets or '-' with black dot
                         sec_html = re.sub(r'^\s*[-*]\s+', '• ', sec, flags=re.MULTILINE)
-                        sec_html = sec_html.replace('\n', '<br>')  # preserve line breaks
+                        sec_html = sec_html.replace('\n', '<br>')
 
                         # Add heading with blue diamond
                         heading = f"🔹 {headings[i % len(headings)]}"
