@@ -4,6 +4,8 @@ import google.generativeai as genai
 # -----------------------------------
 # 🔑 Configure Gemini API Key securely
 # -----------------------------------
+# Add your key in Streamlit Cloud → Settings → Secrets:
+# GEMINI_API_KEY = "your_api_key_here"
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 # -----------------------------------
@@ -58,14 +60,16 @@ Model: {model_name}
 Issue: {issue}
 Display Error (if any): {display_error or 'No specific error provided'}
 
-Generate a detailed, crisp, and short report including the following sections separately:
+Generate a detailed, crisp, and short report including the following:
 
-1. Probable Causes
-2. Appliance Brand Customer Care
-3. Turnaround Time (TAT)
-4. Spare Parts Information
+1. Probable Causes — 2–3 possible technical reasons for the issue with estimated cost ranges in INR.
+2. Appliance Brand Customer Care — official customer care number.
+3. Turnaround Time (TAT) — realistic average service time in days.
+4. Spare Parts Information — for all issues in point 1, include:
+   - Brand/original part cost & lifespan
+   - Local/non-branded part avg cost & lifespan
 
-Format the output with bullet points under each heading.
+Format the output with bullet points and short actionable sentences.
 """
 
             try:
@@ -76,46 +80,25 @@ Format the output with bullet points under each heading.
                 st.success("✅ Diagnosis Report Generated Successfully!")
                 st.markdown("---")
 
-                # Split output by headings (assuming Gemini outputs numbered sections)
-                sections = response.text.split("\n")
-                output_dict = {}
-                current_heading = ""
-                for line in sections:
-                    if line.strip().startswith(("1.", "2.", "3.", "4.")):
-                        current_heading = line.strip().split(" ", 1)[1]
-                        output_dict[current_heading] = []
-                    elif current_heading:
-                        output_dict[current_heading].append(line.strip())
-
-                # Define colors for each heading box
-                heading_colors = {
-                    "Probable Causes": "#2A2F3A",
-                    "Appliance Brand Customer Care": "#1F4C5C",
-                    "Turnaround Time (TAT)": "#3A2F2F",
-                    "Spare Parts Information": "#3A2F5C",
-                }
-
-                for heading, lines in output_dict.items():
-                    bg_color = heading_colors.get(heading, "#1B1F2A")
-                    st.markdown(
-                        f"""
-                        <div style="
-                            background-color:{bg_color};
-                            color:#E6EDF3;
-                            padding:1rem;
-                            border-radius:10px;
-                            margin-bottom:10px;
-                            border:1px solid #333;
-                            font-family:monospace;
-                            white-space:pre-wrap;
-                        ">
-                        <b>{heading}</b>
-                        <br>
-                        {"<br>".join(lines)}
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
+                # Scrollable styled output matching dark theme
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color:#1B1F2A;
+                        color:#E6EDF3;
+                        padding:1rem;
+                        border-radius:10px;
+                        border:1px solid #333;
+                        max-height:400px;
+                        overflow-y:auto;
+                        white-space:pre-wrap;
+                        font-family:monospace;
+                    ">
+                    {response.text}
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
