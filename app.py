@@ -27,7 +27,7 @@ with st.form("diagnostic_form"):
     col1, col2 = st.columns(2)
     with col1:
          model_number = st.text_input(" Model Number", placeholder="e.g. LG T70SPSF2Z")
-        issue = st.text_area(" Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
+         issue = st.text_area(" Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
     with col2:
         display_error = st.text_input(" Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
 
@@ -122,5 +122,6 @@ Keep it short, clear, and visually aesthetic.
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
 
 
