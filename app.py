@@ -1,57 +1,48 @@
 import streamlit as st
 import google.generativeai as genai
+import re
 
-# -----------------------------------
-#  Configure Gemini API Key securely
-# -----------------------------------
-# Add your key in Streamlit Cloud → Settings → Secrets:
-# GEMINI_API_KEY = "your_api_key_here"
+# -----------------------------
+# Configure Gemini API Key
+# -----------------------------
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-# -----------------------------------
-#  Streamlit UI Setup
-# -----------------------------------
+# -----------------------------
+# Streamlit UI Setup
+# -----------------------------
 st.set_page_config(
     page_title="Appliance Diagnostic Assistant",
     layout="wide",
 )
 
-st.title(" Appliance Diagnostic Assistant")
+st.title("🔧 Appliance Diagnostic Assistant")
 st.markdown(
     "Get **probable causes**, **service info**, and **spare part details** for your home appliances."
 )
 
-# -----------------------------------
-# 1. Side-by-side input layout
-# -----------------------------------
+# -----------------------------
+# Input form
+# -----------------------------
 with st.form("diagnostic_form"):
     col1, col2 = st.columns(2)
     with col1:
-        appliance = st.text_input(
-            " Appliance Type",
-            placeholder="e.g. TV, Refrigerator (mention brand)",
-        )
-        issue = st.text_area(
-            " Describe the Issue",
-            placeholder="e.g. No display, Not cooling, making noise...",
-        )
+        appliance = st.text_input("🧺 Appliance Type", placeholder="e.g. TV, Refrigerator (mention brand)")
+        issue = st.text_area("⚙️ Describe the Issue", placeholder="e.g. No display, Not cooling, making noise...")
     with col2:
-        model_name = st.text_input(" Model Name", placeholder="e.g. LG T70SPSF2Z")
-        display_error = st.text_input(
-            " Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc."
-        )
+        model_name = st.text_input("🔤 Model Name", placeholder="e.g. LG T70SPSF2Z")
+        display_error = st.text_input("💡 Error Code / Message (Optional)", placeholder="e.g. E4, F07, etc.")
 
     st.markdown("")  # spacing
-    submitted = st.form_submit_button(" Diagnose Appliance", use_container_width=True)
+    submitted = st.form_submit_button("🔍 Diagnose Appliance", use_container_width=True)
 
-# -----------------------------------
-# 2. Processing and Response
-# -----------------------------------
+# -----------------------------
+# Processing and Response
+# -----------------------------
 if submitted:
     if not appliance or not model_name or not issue:
-        st.warning(" Please fill in all the required fields before diagnosing.")
+        st.warning("⚠️ Please fill in all the required fields before diagnosing.")
     else:
-        with st.spinner("Analyzing the issue... Please wait "):
+        with st.spinner("Analyzing the issue... Please wait ⏳"):
             prompt = f"""
 You are an appliance service diagnostic assistant.
 
@@ -69,37 +60,43 @@ Generate a detailed, crisp, and short report including the following:
    - Brand/original part cost & lifespan
    - Local/non-branded part avg cost & lifespan
 
-Format the output with bullet points and short actionable sentences.
+Format the output with bullet points. Do not combine sections; output headings explicitly.
 """
 
             try:
-                # Use Gemini model
+                # Generate content
                 model = genai.GenerativeModel("gemini-2.5-flash-lite")
                 response = model.generate_content(prompt)
+                text = response.text
 
-                st.success(" Diagnosis Report Generated Successfully!")
+                st.success("✅ Diagnosis Report Generated Successfully!")
                 st.markdown("---")
 
-                # Scrollable styled output matching dark theme
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color:#1B1F2A;
-                        color:#E6EDF3;
-                        padding:1rem;
-                        border-radius:10px;
-                        border:1px solid #333;
-                        max-height:400px;
-                        overflow-y:auto;
-                        white-space:pre-wrap;
-                        font-family:monospace;
-                    ">
-                    {response.text}
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
+                # -----------------------------
+                # Split response into sections
+                # -----------------------------
+                sections = re.split(r'(?=\d\.)', text)  # splits at "1.", "2.", etc.
+
+                colors = ["#2E8B57", "#4682B4", "#DAA520", "#8B008B"]  # unique color per section
+
+                for i, sec in enumerate(sections):
+                    if sec.strip():
+                        st.markdown(
+                            f"""
+                            <div style="
+                                background-color:{colors[i % len(colors)]};
+                                color:#FFFFFF;
+                                padding:1rem;
+                                border-radius:10px;
+                                margin-bottom:1rem;
+                                white-space:pre-wrap;
+                                font-family:monospace;
+                            ">
+                            {sec.strip()}
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
-
